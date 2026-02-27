@@ -14,6 +14,13 @@ amount.addEventListener("input", () => {
   amount.value = amount.value.replace(hasCharactersRegex, "")
 })
 
+function formatCurrencyBRL(value) {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  }).format(value)
+}
+
 form.onsubmit = (event) => {
   event.preventDefault()
 
@@ -33,17 +40,17 @@ form.onsubmit = (event) => {
 
 function convertCurrency(amount, price, symbol){
   try {
-    description.textContent = `${symbol} 1 = ${price}`
+    description.textContent = `${symbol} 1 = ${formatCurrencyBRL(price)}`
 
     let total = amount * price
+    total = formatCurrencyBRL(total).replace("R$", "")
 
-    result.textContent = total
+    result.textContent = `${total} Reais`
 
     footer.classList.add("show-result")
+  } catch (error) {
+    console.log(error)
+    footer.classList.remove("show-result")
+    alert("Não foi possível converter. Tente novamente mais tarde.")
   }
- catch (error){
-  console.log(error)
-  footer.classList.remove("show-result")
-  alert("Não foi possível converter. Tente novamente mais tarde.")
-  }
- }
+}
